@@ -6,6 +6,14 @@
 #include "sudoku.h"
 using namespace std;
 
+void trans(const char in[N], int* target)
+{
+    for(int i = 0; i < N; ++i)
+    {
+        target[i] = in[i] - 48;
+    }
+}
+
 struct Node;
 typedef Node Column;
 struct Node
@@ -18,10 +26,6 @@ struct Node
     int name;
     int size;
 };
-
-const int kMaxNodes = 1 + 81*4 + 9*9*9*4;
-const int kMaxColumns = 400;
-const int kRow = 100, kCol = 200, kBox = 300;
 
 
 struct Dance
@@ -77,17 +81,17 @@ struct Dance
 
     int get_row_col(int row, int val)
     {
-        return kRow+row*10+val;
+        return kRow + row * 10 + val;
     }
 
     int get_col_col(int col, int val)
     {
-        return kCol+col*10+val;
+        return kCol + col * 10 + val;
     }
 
     int get_box_col(int box, int val)
     {
-        return kBox+box*10+val;
+        return kBox + box * 10 + val;
     }
 
     Dance(int inout[81]) : inout_(inout), cur_node_(0)
@@ -105,7 +109,7 @@ struct Dance
         for (int i = 0; i < N; ++i) {
             int row = i / 9;
             int col = i % 9;
-            int box = row/3*3 + col/3;
+            int box = row / 3 * 3 + col / 3;
             int val = inout[i];
             rows[row][val] = true;
             cols[col][val] = true;
@@ -133,7 +137,7 @@ struct Dance
             if (inout[i] == 0) {
                 int row = i / 9;
                 int col = i % 9;
-                int box = row/3*3 + col/3;
+                int box = row / 3 * 3 + col / 3;
                 //int val = inout[i];
                 for (int v = 1; v < 10; ++v) {
                     if (!(rows[row][v] || cols[col][v] || boxes[box][v])) {
@@ -252,7 +256,7 @@ struct Dance
     }
 };
 
-bool solve_sudoku_dancing_links(int unused)
+bool solve_sudoku_dancing_links(int* board)
 {
   Dance d(board);
   return d.solve();
